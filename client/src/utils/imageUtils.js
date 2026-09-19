@@ -1,4 +1,14 @@
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
+const getBaseServerUrl = () => {
+  if (import.meta.env.VITE_SERVER_URL) {
+    return import.meta.env.VITE_SERVER_URL;
+  }
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '');
+  }
+  return 'http://localhost:5000';
+};
+
+const SERVER_URL = getBaseServerUrl();
 
 export const DEFAULT_LISTING_IMAGE =
   'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80';

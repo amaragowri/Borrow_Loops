@@ -2,7 +2,15 @@ const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
 
-  console.error('[Error Handler]', err);
+  console.error('[Error Handler]', err.message || err);
+
+  // CORS policy error
+  if (err.message && err.message.includes('CORS policy')) {
+    return res.status(403).json({
+      success: false,
+      message: err.message,
+    });
+  }
 
   // Multer file size error
   if (err.code === 'LIMIT_FILE_SIZE') {
