@@ -88,56 +88,54 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Demo Quick Fill Buttons (Development Only) */}
-        {isDevelopment && (
-          <div className="p-3.5 bg-brand-50/60 dark:bg-brand-950/30 rounded-2xl border border-brand-200/60 dark:border-brand-900 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-brand-700 dark:text-brand-300 flex items-center gap-1">
-                <Sparkles size={12} /> Instant Demo Logins:
+        {/* Demo Quick Fill Buttons */}
+        <div className="p-3.5 bg-brand-50/60 dark:bg-brand-950/30 rounded-2xl border border-brand-200/60 dark:border-brand-900 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-brand-700 dark:text-brand-300 flex items-center gap-1.5">
+              <Sparkles size={14} className="text-brand-500 animate-pulse" /> Instant Demo Logins:
+            </span>
+            {selectedDemoRole && (
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 uppercase tracking-wider">
+                {selectedDemoRole} Active
               </span>
-              {selectedDemoRole && (
-                <span className="text-[10px] font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-wide">
-                  {selectedDemoRole} Selected
-                </span>
-              )}
-            </div>
-            <div className="grid grid-cols-3 gap-1.5">
-              <button
-                type="button"
-                onClick={() => handleDemoFill('lender')}
-                className={`py-1.5 px-2 rounded-lg text-[11px] font-semibold transition flex items-center justify-center gap-1 ${
-                  selectedDemoRole === 'lender'
-                    ? 'bg-brand-600 text-white shadow-sm ring-2 ring-brand-400/30'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm hover:text-brand-600'
-                }`}
-              >
-                Lender
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDemoFill('borrower')}
-                className={`py-1.5 px-2 rounded-lg text-[11px] font-semibold transition flex items-center justify-center gap-1 ${
-                  selectedDemoRole === 'borrower'
-                    ? 'bg-brand-600 text-white shadow-sm ring-2 ring-brand-400/30'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm hover:text-brand-600'
-                }`}
-              >
-                Borrower
-              </button>
-              <button
-                type="button"
-                onClick={() => handleDemoFill('admin')}
-                className={`py-1.5 px-2 rounded-lg text-[11px] font-semibold transition flex items-center justify-center gap-1 ${
-                  selectedDemoRole === 'admin'
-                    ? 'bg-brand-600 text-white shadow-sm ring-2 ring-brand-400/30'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm hover:text-brand-600'
-                }`}
-              >
-                Admin
-              </button>
-            </div>
+            )}
           </div>
-        )}
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              type="button"
+              onClick={() => handleDemoFill('lender')}
+              className={`py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
+                selectedDemoRole === 'lender'
+                  ? 'bg-brand-600 text-white shadow-md ring-2 ring-brand-400/40 scale-[1.02]'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm border border-slate-200/60 dark:border-slate-700/60 hover:border-brand-400 hover:text-brand-600'
+              }`}
+            >
+              Lender
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDemoFill('borrower')}
+              className={`py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
+                selectedDemoRole === 'borrower'
+                  ? 'bg-brand-600 text-white shadow-md ring-2 ring-brand-400/40 scale-[1.02]'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm border border-slate-200/60 dark:border-slate-700/60 hover:border-brand-400 hover:text-brand-600'
+              }`}
+            >
+              Borrower
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDemoFill('admin')}
+              className={`py-2 px-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer ${
+                selectedDemoRole === 'admin'
+                  ? 'bg-brand-600 text-white shadow-md ring-2 ring-brand-400/40 scale-[1.02]'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm border border-slate-200/60 dark:border-slate-700/60 hover:border-brand-400 hover:text-brand-600'
+              }`}
+            >
+              Admin
+            </button>
+          </div>
+        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
