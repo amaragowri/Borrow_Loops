@@ -52,7 +52,7 @@ export const CATEGORIES = [
     name: 'Furniture',
     icon: 'Armchair',
     description: 'Ergonomic Chairs, Desks, Sofas',
-    image: 'https://images.unsplash.com/photo-1580481077195-c9994c92b8d4?auto=format&fit=crop&w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80',
     color: 'from-yellow-500 to-amber-600',
   },
   {

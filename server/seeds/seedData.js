@@ -584,12 +584,12 @@ const seedDB = async () => {
         subcategory: 'Office Chairs',
         images: [
           {
-            url: 'https://images.unsplash.com/photo-1580481077195-c9994c92b8d4?auto=format&fit=crop&w=1000&q=80',
+            url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1000&q=80',
             publicId: 'chair_1',
             isMain: true,
           },
           {
-            url: 'https://images.unsplash.com/photo-1505797149-43b0069ec26b?auto=format&fit=crop&w=1000&q=80',
+            url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80',
             publicId: 'chair_2',
             isMain: false,
           },
