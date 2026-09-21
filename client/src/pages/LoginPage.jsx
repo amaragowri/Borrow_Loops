@@ -13,9 +13,11 @@ const LoginPage = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [selectedDemoRole, setSelectedDemoRole] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const from = location.state?.from?.pathname || '/dashboard';
+  const isDevelopment = import.meta.env.DEV || import.meta.env.MODE !== 'production';
+  const from = location.state?.from?.pathname;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,26 +28,45 @@ const LoginPage = () => {
 
     setIsLoading(true);
     try {
-      await login(email, password);
+      const data = await login(email, password);
       showToast('Logged in successfully! Welcome back.', 'success');
-      navigate(from, { replace: true });
+
+      // Role and preference-based navigation
+      if (data?.user?.role === 'admin') {
+        navigate(from || '/admin', { replace: true });
+      } else if (from) {
+        navigate(from, { replace: true });
+      } else if (data?.user?.preference === 'lender') {
+        navigate('/dashboard?tab=listings', { replace: true });
+      } else if (data?.user?.preference === 'borrower') {
+        navigate('/dashboard?tab=borrowings', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     } catch (err) {
-      showToast(err.response?.data?.message || 'Login failed. Please check your credentials.', 'error');
+      if (!err.response) {
+        showToast('Unable to connect to BorrowLoop. Please try again.', 'error');
+      } else if (err.response.status === 401) {
+        showToast('Invalid email or password.', 'error');
+      } else {
+        showToast(err.response?.data?.message || 'Login failed. Please check your credentials.', 'error');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDemoFill = (role) => {
+    setSelectedDemoRole(role);
     if (role === 'lender') {
-      setEmail('lender@borrowloop.com');
-      setPassword('lender123');
+      setEmail('lender@borrowloop.demo');
+      setPassword('BorrowLoop@123');
     } else if (role === 'borrower') {
-      setEmail('borrower@borrowloop.com');
-      setPassword('borrower123');
+      setEmail('borrower@borrowloop.demo');
+      setPassword('BorrowLoop@123');
     } else if (role === 'admin') {
-      setEmail('admin@borrowloop.com');
-      setPassword('admin123');
+      setEmail('admin@borrowloop.demo');
+      setPassword('BorrowLoop@123');
     }
   };
 
@@ -67,35 +88,56 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Demo Quick Fill Buttons */}
-        <div className="p-3.5 bg-brand-50/60 dark:bg-brand-950/30 rounded-2xl border border-brand-200/60 dark:border-brand-900 space-y-2">
-          <span className="text-[11px] font-bold text-brand-700 dark:text-brand-300 flex items-center gap-1">
-            <Sparkles size={12} /> Instant Demo Logins:
-          </span>
-          <div className="grid grid-cols-3 gap-1.5">
-            <button
-              type="button"
-              onClick={() => fillDemoAccount('lender')}
-              className="py-1 px-2 rounded-lg bg-white dark:bg-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-sm hover:text-brand-600 transition"
-            >
-              Lender
-            </button>
-            <button
-              type="button"
-              onClick={() => fillDemoAccount('borrower')}
-              className="py-1 px-2 rounded-lg bg-white dark:bg-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-sm hover:text-brand-600 transition"
-            >
-              Borrower
-            </button>
-            <button
-              type="button"
-              onClick={() => fillDemoAccount('admin')}
-              className="py-1 px-2 rounded-lg bg-white dark:bg-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-sm hover:text-brand-600 transition"
-            >
-              Admin
-            </button>
+        {/* Demo Quick Fill Buttons (Development Only) */}
+        {isDevelopment && (
+          <div className="p-3.5 bg-brand-50/60 dark:bg-brand-950/30 rounded-2xl border border-brand-200/60 dark:border-brand-900 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-brand-700 dark:text-brand-300 flex items-center gap-1">
+                <Sparkles size={12} /> Instant Demo Logins:
+              </span>
+              {selectedDemoRole && (
+                <span className="text-[10px] font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-wide">
+                  {selectedDemoRole} Selected
+                </span>
+              )}
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
+              <button
+                type="button"
+                onClick={() => handleDemoFill('lender')}
+                className={`py-1.5 px-2 rounded-lg text-[11px] font-semibold transition flex items-center justify-center gap-1 ${
+                  selectedDemoRole === 'lender'
+                    ? 'bg-brand-600 text-white shadow-sm ring-2 ring-brand-400/30'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm hover:text-brand-600'
+                }`}
+              >
+                Lender
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDemoFill('borrower')}
+                className={`py-1.5 px-2 rounded-lg text-[11px] font-semibold transition flex items-center justify-center gap-1 ${
+                  selectedDemoRole === 'borrower'
+                    ? 'bg-brand-600 text-white shadow-sm ring-2 ring-brand-400/30'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm hover:text-brand-600'
+                }`}
+              >
+                Borrower
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDemoFill('admin')}
+                className={`py-1.5 px-2 rounded-lg text-[11px] font-semibold transition flex items-center justify-center gap-1 ${
+                  selectedDemoRole === 'admin'
+                    ? 'bg-brand-600 text-white shadow-sm ring-2 ring-brand-400/30'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm hover:text-brand-600'
+                }`}
+              >
+                Admin
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">

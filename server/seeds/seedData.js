@@ -18,10 +18,20 @@ const seedDB = async () => {
     if (!mongoUri) {
       throw new Error('MONGODB_URI is not defined in environment variables');
     }
-    await mongoose.connect(mongoUri, {
-      dbName: 'borrowloop',
-    });
-    console.log('[Seed] Connected to MongoDB for seeding...');
+    try {
+      await mongoose.connect(mongoUri, {
+        dbName: 'borrowloop',
+        serverSelectionTimeoutMS: 5000,
+      });
+      console.log('[Seed] Connected to MongoDB for seeding...');
+    } catch (primaryErr) {
+      console.warn(`[Seed Warning] Could not connect to Atlas (${primaryErr.message}). Attempting local MongoDB...`);
+      await mongoose.connect('mongodb://127.0.0.1:27017/borrowloop', {
+        dbName: 'borrowloop',
+        serverSelectionTimeoutMS: 5000,
+      });
+      console.log('[Seed] Connected to local MongoDB for seeding...');
+    }
 
     // Clear previous collections
     await User.deleteMany();
@@ -36,9 +46,9 @@ const seedDB = async () => {
     // 1. Create Users
     const users = await User.create([
       {
-        name: 'Gowri Shankar',
-        email: 'lender@borrowloop.com',
-        password: 'password123',
+        name: 'Gowri Shankar (Lender Demo)',
+        email: 'lender@borrowloop.demo',
+        password: 'BorrowLoop@123',
         phone: '+91 98765 43210',
         location: 'Koramangala, Bengaluru',
         bio: 'Tech enthusiast, photographer, and DIY maker. Happy to lend gear to passionate creators.',
@@ -47,14 +57,14 @@ const seedDB = async () => {
           publicId: 'seed_avatar_1',
         },
         role: 'user',
-        preference: 'both',
+        preference: 'lender',
         rating: 4.9,
         ratingsCount: 18,
       },
       {
-        name: 'Ananya Sharma',
-        email: 'borrower@borrowloop.com',
-        password: 'password123',
+        name: 'Ananya Sharma (Borrower Demo)',
+        email: 'borrower@borrowloop.demo',
+        password: 'BorrowLoop@123',
         phone: '+91 98450 11223',
         location: 'Indiranagar, Bengaluru',
         bio: 'Product designer & weekend backpacker who prefers borrowing sustainably.',
@@ -68,9 +78,9 @@ const seedDB = async () => {
         ratingsCount: 6,
       },
       {
-        name: 'BorrowLoop Admin',
-        email: 'admin@borrowloop.com',
-        password: 'admin123',
+        name: 'BorrowLoop Admin (Admin Demo)',
+        email: 'admin@borrowloop.demo',
+        password: 'BorrowLoop@123',
         phone: '+91 80000 00000',
         location: 'Bengaluru Central',
         bio: 'Platform safety, moderation & community coordinator.',
@@ -84,9 +94,57 @@ const seedDB = async () => {
         ratingsCount: 30,
       },
       {
+        name: 'Gowri Shankar',
+        email: 'lender@borrowloop.com',
+        password: 'BorrowLoop@123',
+        phone: '+91 98765 43210',
+        location: 'Koramangala, Bengaluru',
+        bio: 'Tech enthusiast, photographer, and DIY maker.',
+        avatar: {
+          url: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80',
+          publicId: 'seed_avatar_1_com',
+        },
+        role: 'user',
+        preference: 'lender',
+        rating: 4.9,
+        ratingsCount: 18,
+      },
+      {
+        name: 'Ananya Sharma',
+        email: 'borrower@borrowloop.com',
+        password: 'BorrowLoop@123',
+        phone: '+91 98450 11223',
+        location: 'Indiranagar, Bengaluru',
+        bio: 'Product designer & weekend backpacker.',
+        avatar: {
+          url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80',
+          publicId: 'seed_avatar_2_com',
+        },
+        role: 'user',
+        preference: 'borrower',
+        rating: 4.8,
+        ratingsCount: 6,
+      },
+      {
+        name: 'BorrowLoop Admin',
+        email: 'admin@borrowloop.com',
+        password: 'BorrowLoop@123',
+        phone: '+91 80000 00000',
+        location: 'Bengaluru Central',
+        bio: 'Platform safety, moderation & community coordinator.',
+        avatar: {
+          url: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=400&q=80',
+          publicId: 'seed_avatar_admin_com',
+        },
+        role: 'admin',
+        preference: 'both',
+        rating: 5.0,
+        ratingsCount: 30,
+      },
+      {
         name: 'Vikram Mehta',
         email: 'vikram@borrowloop.com',
-        password: 'password123',
+        password: 'BorrowLoop@123',
         phone: '+91 91234 56789',
         location: 'HSR Layout, Bengaluru',
         bio: 'Musician and audio engineer. Sharing studio gear with fellow artists.',
@@ -104,7 +162,7 @@ const seedDB = async () => {
     const lender = users[0];
     const borrower = users[1];
     const admin = users[2];
-    const musician = users[3];
+    const musician = users[6];
 
     console.log('[Seed] Created sample users.');
 
