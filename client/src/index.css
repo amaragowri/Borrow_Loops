@@ -90,3 +90,106 @@
     rgba(255, 255, 255, 0)
   );
 }
+
+/* 3D Float Animation for Logo */
+@keyframes floatSubtle {
+  0%, 100% {
+    transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotateX(4deg) rotateY(-4deg);
+  }
+}
+
+.animate-float-subtle {
+  animation: floatSubtle 4s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   BorrowLoop Consistent Card Interaction System
+   ========================================================================== */
+
+/* Base Interactive Card */
+.card-interactive {
+  position: relative;
+  cursor: pointer;
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 200ms ease;
+  will-change: transform, box-shadow;
+  outline: none;
+}
+
+/* Hover - only for devices with hover capability (pointer: fine) */
+@media (hover: hover) and (pointer: fine) {
+  .card-interactive:hover {
+    transform: translateY(-3px) scale(1.015);
+    box-shadow: 0 14px 30px -6px rgba(0, 0, 0, 0.08),
+                0 6px 14px -3px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark .card-interactive:hover {
+    box-shadow: 0 14px 30px -6px rgba(0, 0, 0, 0.45),
+                0 6px 14px -3px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Image zoom coordination on card hover */
+  .card-interactive:hover .card-image-zoom {
+    transform: scale(1.04);
+  }
+}
+
+/* Subtle press-down / active click feedback */
+.card-interactive:active {
+  transform: translateY(0px) scale(0.985);
+  transition-duration: 100ms;
+}
+
+/* Accessible focus ring for keyboard navigation */
+.card-interactive:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.6), 0 8px 20px -4px rgba(99, 102, 241, 0.25);
+}
+
+/* Image zoom container & element */
+.card-image-wrap {
+  overflow: hidden;
+  position: relative;
+}
+
+.card-image-zoom {
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* Scroll Reveal (IntersectionObserver Entrance) */
+.scroll-reveal-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal-item.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .card-interactive,
+  .card-interactive:hover,
+  .card-interactive:active,
+  .card-image-zoom,
+  .scroll-reveal-item,
+  .scroll-reveal-item.is-revealed,
+  .animate-float-subtle {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Repeat, Mail, Lock, User, Phone, MapPin, Upload, ArrowRight, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, Phone, MapPin, Upload, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
 import { CITIES } from '../utils/constants';
+import BorrowLoopLogo from '../components/BorrowLoopLogo';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -25,12 +26,12 @@ const RegisterPage = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      showToast('Passwords do not match.', 'error');
+      showToast('Passwords do not match', 'error');
       return;
     }
 
     if (password.length < 6) {
-      showToast('Password must be at least 6 characters long.', 'error');
+      showToast('Password must be at least 6 characters', 'error');
       return;
     }
 
@@ -48,7 +49,7 @@ const RegisterPage = () => {
         formData.append('avatar', avatarFile);
       }
 
-      const res = await register(formData);
+      await register(formData);
       showToast('Account created successfully! Welcome to BorrowLoop.', 'success');
       navigate('/dashboard');
     } catch (err) {
@@ -61,17 +62,19 @@ const RegisterPage = () => {
   return (
     <div className="min-h-[85vh] flex items-center justify-center px-4 py-12">
       <div className="max-w-lg w-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-accent-500 text-white flex items-center justify-center mx-auto shadow-md">
-            <Repeat size={24} />
+        {/* Header with 3D Logo */}
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <Link to="/" className="inline-block hover:scale-105 transition-transform duration-300">
+            <BorrowLoopLogo size="lg" layout="vertical" showTagline={true} interactive={true} animated={true} />
+          </Link>
+          <div className="space-y-1 pt-1">
+            <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 tracking-tight">
+              Create Your Account
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Join the neighborhood borrowing & lending marketplace
+            </p>
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Create Your Account
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Join the neighborhood borrowing & lending marketplace
-          </p>
         </div>
 
         {/* Form */}

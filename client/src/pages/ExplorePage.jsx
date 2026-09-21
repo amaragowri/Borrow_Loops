@@ -155,7 +155,7 @@ const ExplorePage = () => {
               setCategory('All');
               setPage(1);
             }}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition shadow-sm ${
+            className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 active:scale-95 shadow-sm ${
               category === 'All'
                 ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
                 : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
@@ -170,7 +170,7 @@ const ExplorePage = () => {
                 setCategory(c.name);
                 setPage(1);
               }}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition shadow-sm ${
+              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 active:scale-95 shadow-sm ${
                 category === c.name
                   ? 'bg-brand-600 text-white dark:bg-brand-500'
                   : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
@@ -183,31 +183,25 @@ const ExplorePage = () => {
       </div>
 
       {/* Main Grid with Filter Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
-        {/* Sidebar Filters */}
-        <aside
-          className={`${
-            showFiltersMobile ? 'block' : 'hidden'
-          } md:block md:col-span-1 bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle space-y-6 sticky top-24`}
-        >
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-            <span className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-              <Filter size={16} /> Filters
-            </span>
-            {hasActiveFilters && (
-              <button
-                onClick={handleResetFilters}
-                className="text-xs text-brand-600 dark:text-brand-400 hover:underline font-medium"
-              >
-                Clear All
-              </button>
-            )}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* Desktop Filter Sidebar */}
+        <aside className="hidden md:block md:col-span-1 space-y-6 bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle self-start sticky top-24">
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <SlidersHorizontal size={15} /> Filters
+            </h3>
+            <button
+              onClick={handleResetFilters}
+              className="text-xs text-brand-600 dark:text-brand-400 hover:underline font-semibold"
+            >
+              Reset All
+            </button>
           </div>
 
-          {/* City Selector */}
+          {/* City Filter */}
           <div className="space-y-2">
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              City
+              Location / City
             </label>
             <select
               value={city}
@@ -225,7 +219,7 @@ const ExplorePage = () => {
             </select>
           </div>
 
-          {/* Price Range */}
+          {/* Price Range Filter */}
           <div className="space-y-2">
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Price Range (₹/day)
@@ -290,8 +284,8 @@ const ExplorePage = () => {
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {listings.map((listing) => (
-                  <ListingCard key={listing._id} listing={listing} />
+                {listings.map((listing, idx) => (
+                  <ListingCard key={listing._id} listing={listing} index={idx} />
                 ))}
               </div>
 

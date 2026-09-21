@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Repeat, Mail, Lock, ArrowRight, Loader2, Sparkles } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
+import BorrowLoopLogo from '../components/BorrowLoopLogo';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -19,29 +20,29 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
-      showToast('Please enter both email and password', 'warning');
+      showToast('Please enter both email and password', 'error');
       return;
     }
 
     setIsLoading(true);
     try {
-      const res = await login(email, password);
-      showToast(`Welcome back, ${res.user.name}!`, 'success');
+      await login(email, password);
+      showToast('Logged in successfully! Welcome back.', 'success');
       navigate(from, { replace: true });
     } catch (err) {
-      showToast(err.response?.data?.message || 'Invalid email or password', 'error');
+      showToast(err.response?.data?.message || 'Login failed. Please check your credentials.', 'error');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const fillDemoAccount = (role) => {
+  const handleDemoFill = (role) => {
     if (role === 'lender') {
       setEmail('lender@borrowloop.com');
-      setPassword('password123');
+      setPassword('lender123');
     } else if (role === 'borrower') {
       setEmail('borrower@borrowloop.com');
-      setPassword('password123');
+      setPassword('borrower123');
     } else if (role === 'admin') {
       setEmail('admin@borrowloop.com');
       setPassword('admin123');
@@ -51,17 +52,19 @@ const LoginPage = () => {
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-accent-500 text-white flex items-center justify-center mx-auto shadow-md">
-            <Repeat size={24} />
+        {/* Header with 3D Logo */}
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <Link to="/" className="inline-block hover:scale-105 transition-transform duration-300">
+            <BorrowLoopLogo size="lg" layout="vertical" showTagline={true} interactive={true} animated={true} />
+          </Link>
+          <div className="space-y-1 pt-1">
+            <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 tracking-tight">
+              Sign In to Your Account
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Access your active borrowings, listings, and incoming requests
+            </p>
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Sign In to BorrowLoop
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Access your active borrowings, listings, and incoming requests
-          </p>
         </div>
 
         {/* Demo Quick Fill Buttons */}

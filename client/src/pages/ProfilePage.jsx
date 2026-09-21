@@ -120,8 +120,8 @@ const ProfilePage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {userListings.map((listing) => (
-              <ListingCard key={listing._id} listing={listing} />
+            {userListings.map((listing, idx) => (
+              <ListingCard key={listing._id} listing={listing} index={idx} />
             ))}
           </div>
         )}

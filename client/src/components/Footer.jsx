@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Repeat, Heart, Mail, Phone, MapPin, ShieldCheck, Globe, Share2, MessageCircle } from 'lucide-react';
+import { Heart, Mail, Phone, MapPin, ShieldCheck, Globe, Share2, MessageCircle } from 'lucide-react';
+import BorrowLoopLogo from './BorrowLoopLogo';
 
 const Footer = () => {
   return (
@@ -9,13 +10,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
-            <Link to="/" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-accent-400 flex items-center justify-center text-white shadow-md">
-                <Repeat size={20} />
-              </div>
-              <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-brand-600 to-brand-800 dark:from-brand-400 dark:to-accent-300 bg-clip-text text-transparent">
-                BorrowLoop
-              </span>
+            <Link to="/" className="inline-block">
+              <BorrowLoopLogo size="md" showTagline={true} animated={false} interactive={true} />
             </Link>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm">
               Borrow what you need. Share what you have. A trusted community marketplace enabling smart, sustainable resource sharing across your neighborhood.

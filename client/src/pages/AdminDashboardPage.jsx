@@ -15,6 +15,7 @@ import {
 import api from '../services/api';
 import { useNotifications } from '../context/NotificationContext';
 import { formatCurrency, getImageUrl, DEFAULT_AVATAR } from '../utils/imageUtils';
+import InteractiveCard from '../components/InteractiveCard';
 
 const AdminDashboardPage = () => {
   const { showToast } = useNotifications();
@@ -24,9 +25,9 @@ const AdminDashboardPage = () => {
   const [listings, setListings] = useState([]);
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchUser, setSearchUser] = useState('');
 
   const fetchAdminData = async () => {
-    setLoading(true);
     try {
       const [statsRes, usersRes, listingsRes, reportsRes] = await Promise.all([
         api.get('/admin/stats'),
@@ -40,7 +41,7 @@ const AdminDashboardPage = () => {
       if (listingsRes.data.success) setListings(listingsRes.data.listings || []);
       if (reportsRes.data.success) setReports(reportsRes.data.reports || []);
     } catch (err) {
-      showToast('Failed to load admin data', 'error');
+      console.error('Failed to load admin metrics:', err);
     } finally {
       setLoading(false);
     }
@@ -50,53 +51,75 @@ const AdminDashboardPage = () => {
     fetchAdminData();
   }, []);
 
-  const handleToggleBlock = async (userId) => {
+  const handleToggleBlockUser = async (userId) => {
     try {
       const res = await api.put(`/admin/users/${userId}/toggle-block`);
       if (res.data.success) {
-        showToast(res.data.message, 'info');
-        fetchAdminData();
+        showToast(res.data.message, 'success');
+        setUsers((prev) =>
+          prev.map((u) => (u._id === userId ? { ...u, isBlocked: !u.isBlocked } : u))
+        );
       }
     } catch (err) {
       showToast(err.response?.data?.message || 'Action failed', 'error');
     }
   };
 
-  const handleToggleApproval = async (listingId) => {
+  const handleModerateListing = async (listingId, status) => {
     try {
-      const res = await api.put(`/admin/listings/${listingId}/toggle-approval`);
+      const res = await api.put(`/admin/listings/${listingId}/status`, { status });
       if (res.data.success) {
-        showToast(res.data.message, 'info');
-        fetchAdminData();
+        showToast(res.data.message, 'success');
+        setListings((prev) =>
+          prev.map((l) => (l._id === listingId ? { ...l, status } : l))
+        );
       }
     } catch (err) {
-      showToast('Action failed', 'error');
+      showToast(err.response?.data?.message || 'Failed to update listing', 'error');
     }
   };
 
+  const handleResolveReport = async (reportId, actionTaken) => {
+    try {
+      const res = await api.put(`/admin/reports/${reportId}/resolve`, { actionTaken });
+      if (res.data.success) {
+        showToast(res.data.message, 'success');
+        setReports((prev) =>
+          prev.map((r) => (r._id === reportId ? { ...r, status: 'resolved' } : r))
+        );
+      }
+    } catch (err) {
+      showToast('Failed to resolve report', 'error');
+    }
+  };
+
+  const filteredUsers = users.filter(
+    (u) =>
+      u.name?.toLowerCase().includes(searchUser.toLowerCase()) ||
+      u.email?.toLowerCase().includes(searchUser.toLowerCase())
+  );
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-xl">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
-            <Shield size={24} />
-          </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
-              BorrowLoop Platform Administration
-            </h1>
-            <p className="text-xs text-slate-300">
-              Manage users, listings moderation, safety, and platform revenue
-            </p>
-          </div>
+      <div className="flex items-center gap-3.5 border-b border-slate-200 dark:border-slate-800 pb-6">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-700 text-white flex items-center justify-center shadow-lg">
+          <Shield size={24} />
+        </div>
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Admin Governance & Moderation
+          </h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            BorrowLoop Platform Administration • Real-Time Health & Escrow Insights
+          </p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 overflow-x-auto pb-1 scrollbar-none">
         {[
-          { id: 'overview', label: 'Platform Stats' },
+          { id: 'overview', label: 'Platform Metrics' },
           { id: 'users', label: `Users (${users.length})` },
           { id: 'listings', label: `Listings Moderation (${listings.length})` },
           { id: 'reports', label: `Reports (${reports.length})` },
@@ -123,26 +146,49 @@ const AdminDashboardPage = () => {
           {activeTab === 'overview' && stats && (
             <div className="space-y-8 animate-fade-in">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle">
+                <InteractiveCard
+                  index={0}
+                  onClick={() => setActiveTab('users')}
+                  className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col justify-between"
+                  role="button"
+                  tabIndex={0}
+                  aria-label="View Users"
+                >
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Users</span>
                   <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-1">{stats.totalUsers}</h3>
-                </div>
-                <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle">
+                </InteractiveCard>
+
+                <InteractiveCard
+                  index={1}
+                  onClick={() => setActiveTab('listings')}
+                  className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col justify-between"
+                  role="button"
+                  tabIndex={0}
+                  aria-label="View Listings"
+                >
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Listings</span>
                   <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-1">{stats.totalListings}</h3>
                   <span className="text-xs text-emerald-500 font-semibold">{stats.activeListings} active</span>
-                </div>
-                <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle">
+                </InteractiveCard>
+
+                <InteractiveCard
+                  index={2}
+                  className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col justify-between"
+                >
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Bookings</span>
                   <h3 className="text-2xl font-black text-slate-900 dark:text-white mt-1">{stats.totalBookings}</h3>
-                </div>
-                <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle">
+                </InteractiveCard>
+
+                <InteractiveCard
+                  index={3}
+                  className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col justify-between"
+                >
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Platform Revenue (5%)</span>
                   <h3 className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
                     {formatCurrency(stats.platformEarnings)}
                   </h3>
                   <span className="text-[11px] text-slate-400">Volume: {formatCurrency(stats.grossVolume)}</span>
-                </div>
+                </InteractiveCard>
               </div>
             </div>
           )}

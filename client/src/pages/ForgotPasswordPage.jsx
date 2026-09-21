@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Repeat, Mail, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { Mail, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
 import api from '../services/api';
 import { useNotifications } from '../context/NotificationContext';
+import BorrowLoopLogo from '../components/BorrowLoopLogo';
 
 export const ForgotPasswordPage = () => {
   const { showToast } = useNotifications();
@@ -29,16 +30,18 @@ export const ForgotPasswordPage = () => {
   return (
     <div className="min-h-[75vh] flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 flex items-center justify-center mx-auto shadow-sm">
-            <Mail size={24} />
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <Link to="/" className="inline-block hover:scale-105 transition-transform duration-300">
+            <BorrowLoopLogo size="lg" layout="vertical" showTagline={true} interactive={true} animated={true} />
+          </Link>
+          <div className="space-y-1 pt-1">
+            <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 tracking-tight">
+              Reset Your Password
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Enter your registered email address to receive password reset instructions.
+            </p>
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Reset Your Password
-          </h2>
-          <p className="text-xs text-slate-500">
-            Enter your registered email address to receive password reset instructions.
-          </p>
         </div>
 
         {isSent ? (

@@ -28,6 +28,7 @@ import ListingCard from '../components/ListingCard';
 import RatingStars from '../components/RatingStars';
 import EmptyState from '../components/EmptyState';
 import { formatCurrency, getImageUrl, DEFAULT_AVATAR, DEFAULT_LISTING_IMAGE } from '../utils/imageUtils';
+import InteractiveCard from '../components/InteractiveCard';
 
 const DashboardPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -317,7 +318,14 @@ const DashboardPage = () => {
             <div className="space-y-8 animate-fade-in">
               {/* Metric Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between">
+                <InteractiveCard
+                  index={0}
+                  onClick={() => setTab('borrower')}
+                  className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between"
+                  role="button"
+                  tabIndex={0}
+                  aria-label="View Active Rentals"
+                >
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
                       Active Rentals
@@ -329,9 +337,16 @@ const DashboardPage = () => {
                   <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 flex items-center justify-center">
                     <ShoppingBag size={22} />
                   </div>
-                </div>
+                </InteractiveCard>
 
-                <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between">
+                <InteractiveCard
+                  index={1}
+                  onClick={() => setTab('lender')}
+                  className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between"
+                  role="button"
+                  tabIndex={0}
+                  aria-label="View Pending Requests"
+                >
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
                       Pending Requests
@@ -343,9 +358,16 @@ const DashboardPage = () => {
                   <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 flex items-center justify-center">
                     <Clock size={22} />
                   </div>
-                </div>
+                </InteractiveCard>
 
-                <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between">
+                <InteractiveCard
+                  index={2}
+                  onClick={() => setTab('lender')}
+                  className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between"
+                  role="button"
+                  tabIndex={0}
+                  aria-label="View Lender Earnings"
+                >
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
                       Lender Earnings
@@ -357,9 +379,16 @@ const DashboardPage = () => {
                   <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 flex items-center justify-center">
                     <DollarSign size={22} />
                   </div>
-                </div>
+                </InteractiveCard>
 
-                <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between">
+                <InteractiveCard
+                  index={3}
+                  onClick={() => setTab('borrower')}
+                  className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between"
+                  role="button"
+                  tabIndex={0}
+                  aria-label="View Total Spent"
+                >
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
                       Total Spent
@@ -371,7 +400,7 @@ const DashboardPage = () => {
                   <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-brand-600 flex items-center justify-center">
                     <ShoppingBag size={22} />
                   </div>
-                </div>
+                </InteractiveCard>
               </div>
 
               {/* Pending Requests Alert for Lender */}
@@ -483,9 +512,12 @@ const DashboardPage = () => {
                 />
               ) : (
                 <div className="space-y-4">
-                  {borrowerBookings.map((booking) => (
-                    <div
+                  {borrowerBookings.map((booking, idx) => (
+                    <InteractiveCard
                       key={booking._id}
+                      index={idx}
+                      interactive={false}
+                      enableReveal={true}
                       className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col md:flex-row md:items-center justify-between gap-6"
                     >
                       <div className="flex items-start gap-4">
@@ -567,7 +599,7 @@ const DashboardPage = () => {
                           </button>
                         )}
                       </div>
-                    </div>
+                    </InteractiveCard>
                   ))}
                 </div>
               )}
@@ -592,9 +624,12 @@ const DashboardPage = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {lenderBookings.map((b) => (
-                      <div
+                    {lenderBookings.map((b, idx) => (
+                      <InteractiveCard
                         key={b._id}
+                        index={idx}
+                        interactive={false}
+                        enableReveal={true}
                         className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col md:flex-row md:items-center justify-between gap-4"
                       >
                         <div className="flex items-start gap-4">
@@ -663,7 +698,7 @@ const DashboardPage = () => {
                             {b.bookingStatus}
                           </span>
                         </div>
-                      </div>
+                      </InteractiveCard>
                     ))}
                   </div>
                 )}
@@ -697,16 +732,17 @@ const DashboardPage = () => {
                   />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {myListings.map((listing) => (
-                      <div
+                    {myListings.map((listing, idx) => (
+                      <InteractiveCard
                         key={listing._id}
+                        index={idx}
                         className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 overflow-hidden shadow-subtle flex flex-col justify-between"
                       >
-                        <div className="relative aspect-[4/3] w-full bg-slate-100 dark:bg-slate-800">
+                        <div className="card-image-wrap aspect-[4/3] w-full bg-slate-100 dark:bg-slate-800">
                           <img
                             src={getImageUrl(listing.images?.[0]?.url, DEFAULT_LISTING_IMAGE)}
                             alt=""
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover card-image-zoom"
                           />
                           <span
                             className={`absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase ${
@@ -756,7 +792,7 @@ const DashboardPage = () => {
                             </button>
                           </div>
                         </div>
-                      </div>
+                      </InteractiveCard>
                     ))}
                   </div>
                 )}
@@ -780,10 +816,11 @@ const DashboardPage = () => {
                 />
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {favorites.map((listing) => (
+                  {favorites.map((listing, idx) => (
                     <ListingCard
                       key={listing._id}
                       listing={listing}
+                      index={idx}
                       isFavorited={true}
                       onFavoriteToggle={(id, isFav) => {
                         if (!isFav) {

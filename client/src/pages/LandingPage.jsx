@@ -18,6 +18,8 @@ import api from '../services/api';
 import ListingCard from '../components/ListingCard';
 import { ListingGridSkeleton } from '../components/SkeletonLoader';
 import { CATEGORIES, CITIES } from '../utils/constants';
+import BorrowLoopLogo, { BorrowLoopIcon3D } from '../components/BorrowLoopLogo';
+import InteractiveCard from '../components/InteractiveCard';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -60,10 +62,14 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section className="relative pt-12 pb-20 overflow-hidden glow-mesh border-b border-slate-200/60 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-8">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-semibold shadow-sm animate-fade-in">
-            <Sparkles size={14} className="text-brand-500" />
-            <span>The Smart Peer-to-Peer Sharing Economy</span>
+          {/* 3D Brand Badge */}
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold shadow-lg shadow-brand-500/5 animate-fade-in hover:shadow-xl transition-all">
+            <BorrowLoopIcon3D size={26} interactive={false} animated={true} />
+            <div className="h-4 w-px bg-slate-200 dark:bg-slate-700" />
+            <div className="flex items-center gap-1.5 text-brand-600 dark:text-brand-400">
+              <Sparkles size={14} className="text-brand-500" />
+              <span>The Smart Peer-to-Peer Sharing Economy</span>
+            </div>
           </div>
 
           {/* Headline & Subtitle */}
@@ -212,19 +218,20 @@ const LandingPage = () => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          {CATEGORIES.map((cat) => (
-            <Link
+          {CATEGORIES.map((cat, idx) => (
+            <InteractiveCard
               key={cat.name}
               to={`/explore?category=${encodeURIComponent(cat.name)}`}
-              className="group relative rounded-2xl overflow-hidden aspect-[4/3] border border-slate-200/80 dark:border-slate-800 shadow-subtle hover:shadow-premium transition-all duration-300"
+              index={idx}
+              className="group relative rounded-2xl overflow-hidden aspect-[4/3] border border-slate-200/80 dark:border-slate-800 shadow-subtle hover:border-brand-300 dark:hover:border-slate-700 card-image-wrap block"
             >
               <img
                 src={cat.image}
                 alt={cat.name}
                 loading="lazy"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                className="w-full h-full object-cover card-image-zoom"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent flex flex-col justify-end p-3.5">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent flex flex-col justify-end p-3.5 pointer-events-none">
                 <span className="text-xs font-bold text-white group-hover:text-brand-300 transition-colors">
                   {cat.name}
                 </span>
@@ -232,7 +239,7 @@ const LandingPage = () => {
                   {cat.description}
                 </span>
               </div>
-            </Link>
+            </InteractiveCard>
           ))}
         </div>
       </section>
@@ -261,8 +268,8 @@ const LandingPage = () => {
           <ListingGridSkeleton count={6} />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredListings.map((listing) => (
-              <ListingCard key={listing._id} listing={listing} />
+            {featuredListings.map((listing, idx) => (
+              <ListingCard key={listing._id} listing={listing} index={idx} />
             ))}
           </div>
         )}
@@ -315,8 +322,11 @@ const LandingPage = () => {
           ].map((item, idx) => {
             const StepIcon = item.icon;
             return (
-              <div
+              <InteractiveCard
                 key={idx}
+                index={idx}
+                interactive={false}
+                enableReveal={true}
                 className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col space-y-4 relative"
               >
                 <div className="flex items-center justify-between">
@@ -335,7 +345,7 @@ const LandingPage = () => {
                     {item.desc}
                   </p>
                 </div>
-              </div>
+              </InteractiveCard>
             );
           })}
         </div>
@@ -345,47 +355,49 @@ const LandingPage = () => {
       <section className="bg-slate-100/70 dark:bg-slate-900/50 py-16 border-y border-slate-200/80 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-brand-100 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 flex items-center justify-center shrink-0">
-                <Shield size={24} />
-              </div>
-              <div className="space-y-1">
-                <h4 className="text-base font-bold text-slate-900 dark:text-white">
-                  Verified Users & ID Checks
-                </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                  Borrow and lend with confidence. Every member completes identity and phone verification.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                <Clock size={24} />
-              </div>
-              <div className="space-y-1">
-                <h4 className="text-base font-bold text-slate-900 dark:text-white">
-                  Zero Double-Booking Guarantee
-                </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                  Our real-time backend calendar engine guarantees items are strictly locked during reserved slots.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                <Users size={24} />
-              </div>
-              <div className="space-y-1">
-                <h4 className="text-base font-bold text-slate-900 dark:text-white">
-                  Flexible Online & Offline Pay
-                </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                  Pay securely via card/UPI or choose in-person cash handover upon inspecting the item.
-                </p>
-              </div>
-            </div>
+            {[
+              {
+                icon: Shield,
+                title: 'Verified Users & ID Checks',
+                desc: 'Borrow and lend with confidence. Every member completes identity and phone verification.',
+                color: 'bg-brand-100 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400',
+              },
+              {
+                icon: Clock,
+                title: 'Zero Double-Booking Guarantee',
+                desc: 'Our real-time backend calendar engine guarantees items are strictly locked during reserved slots.',
+                color: 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400',
+              },
+              {
+                icon: Users,
+                title: 'Flexible Online & Offline Pay',
+                desc: 'Pay securely via card/UPI or choose in-person cash handover upon inspecting the item.',
+                color: 'bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400',
+              },
+            ].map((point, idx) => {
+              const PointIcon = point.icon;
+              return (
+                <InteractiveCard
+                  key={idx}
+                  index={idx}
+                  interactive={false}
+                  enableReveal={true}
+                  className="flex items-start gap-4 p-2 rounded-2xl"
+                >
+                  <div className={`w-12 h-12 rounded-2xl ${point.color} flex items-center justify-center shrink-0 shadow-sm`}>
+                    <PointIcon size={24} />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-base font-bold text-slate-900 dark:text-white">
+                      {point.title}
+                    </h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                      {point.desc}
+                    </p>
+                  </div>
+                </InteractiveCard>
+              );
+            })}
           </div>
         </div>
       </section>

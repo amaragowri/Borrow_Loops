@@ -25,6 +25,7 @@ import RatingStars from '../components/RatingStars';
 import PriceBreakdown from '../components/PriceBreakdown';
 import PaymentModal from '../components/PaymentModal';
 import { formatCurrency, getImageUrl, DEFAULT_AVATAR } from '../utils/imageUtils';
+import InteractiveCard from '../components/InteractiveCard';
 
 const ListingDetailPage = () => {
   const { id } = useParams();
@@ -342,7 +343,12 @@ const ListingDetailPage = () => {
             <h2 className="text-xl font-bold text-slate-900 dark:text-white">
               Meet the Lender
             </h2>
-            <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <InteractiveCard
+              interactive={false}
+              enableReveal={true}
+              index={0}
+              className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+            >
               <div className="flex items-center gap-4">
                 <img
                   src={getImageUrl(listing.owner?.avatar?.url, DEFAULT_AVATAR)}
@@ -365,7 +371,7 @@ const ListingDetailPage = () => {
               <div className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
                 {listing.owner?.bio || 'Passionate community member sharing high quality gear.'}
               </div>
-            </div>
+            </InteractiveCard>
           </div>
 
           {/* Reviews Section */}
@@ -383,9 +389,12 @@ const ListingDetailPage = () => {
               </p>
             ) : (
               <div className="space-y-4">
-                {reviews.map((rev) => (
-                  <div
+                {reviews.map((rev, idx) => (
+                  <InteractiveCard
                     key={rev._id}
+                    index={idx}
+                    interactive={false}
+                    enableReveal={true}
                     className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle space-y-2"
                   >
                     <div className="flex items-center justify-between">
@@ -409,7 +418,7 @@ const ListingDetailPage = () => {
                     <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                       {rev.comment}
                     </p>
-                  </div>
+                  </InteractiveCard>
                 ))}
               </div>
             )}

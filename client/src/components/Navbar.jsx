@@ -18,6 +18,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import NotificationDropdown from './NotificationDropdown';
 import { getImageUrl, DEFAULT_AVATAR } from '../utils/imageUtils';
+import BorrowLoopLogo from './BorrowLoopLogo';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
@@ -43,18 +44,8 @@ const Navbar = () => {
     <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-200/80 dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group shrink-0">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-accent-400 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-200">
-            <Repeat size={22} className="group-hover:rotate-180 transition-transform duration-500" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-brand-600 to-brand-800 dark:from-brand-400 dark:to-accent-300 bg-clip-text text-transparent">
-              BorrowLoop
-            </span>
-            <span className="text-[10px] -mt-1 font-medium text-slate-500 dark:text-slate-400 tracking-wider">
-              SHARE & BORROW
-            </span>
-          </div>
+        <Link to="/" className="flex items-center shrink-0">
+          <BorrowLoopLogo size="md" showTagline={true} interactive={true} animated={true} />
         </Link>
 
         {/* Desktop Navigation */}
