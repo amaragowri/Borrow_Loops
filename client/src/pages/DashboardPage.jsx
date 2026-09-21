@@ -320,6 +320,7 @@ const DashboardPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <InteractiveCard
                   index={0}
+                  variant="stat"
                   onClick={() => setTab('borrower')}
                   className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between"
                   role="button"
@@ -341,6 +342,7 @@ const DashboardPage = () => {
 
                 <InteractiveCard
                   index={1}
+                  variant="stat"
                   onClick={() => setTab('lender')}
                   className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between"
                   role="button"
@@ -362,6 +364,7 @@ const DashboardPage = () => {
 
                 <InteractiveCard
                   index={2}
+                  variant="stat"
                   onClick={() => setTab('lender')}
                   className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between"
                   role="button"
@@ -383,6 +386,7 @@ const DashboardPage = () => {
 
                 <InteractiveCard
                   index={3}
+                  variant="stat"
                   onClick={() => setTab('borrower')}
                   className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex items-center justify-between"
                   role="button"

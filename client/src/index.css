@@ -106,8 +106,25 @@
 }
 
 /* ==========================================================================
-   BorrowLoop Consistent Card Interaction System
+   BorrowLoop Consistent Motion & Card Interaction System
    ========================================================================== */
+
+/* Page Entrance Animation */
+@keyframes pageEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: pageEnter 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
 
 /* Base Interactive Card */
 .card-interactive {
@@ -133,6 +150,35 @@
                 0 6px 14px -3px rgba(0, 0, 0, 0.3);
   }
 
+  /* Stat Card Variant - Lighter 2px lift, stable typography */
+  .card-interactive-stat:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.06);
+  }
+
+  .dark .card-interactive-stat:hover {
+    box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Compact Variant (Booking, Notification, Review) */
+  .card-interactive-compact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.06);
+  }
+
+  .dark .card-interactive-compact:hover {
+    box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Category Variant - Micro icon zoom */
+  .card-interactive-category:hover {
+    transform: translateY(-3px) scale(1.02);
+  }
+
+  .card-interactive-category:hover .category-icon-zoom {
+    transform: scale(1.08);
+  }
+
   /* Image zoom coordination on card hover */
   .card-interactive:hover .card-image-zoom {
     transform: scale(1.04);
@@ -151,6 +197,12 @@
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.6), 0 8px 20px -4px rgba(99, 102, 241, 0.25);
 }
 
+/* Category Icon Transition */
+.category-icon-zoom {
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
 /* Image zoom container & element */
 .card-image-wrap {
   overflow: hidden;
@@ -162,12 +214,43 @@
   will-change: transform;
 }
 
+/* Interactive Buttons */
+.btn-interactive {
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 150ms ease,
+              opacity 150ms ease;
+  will-change: transform, box-shadow;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-interactive:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+}
+
+.btn-interactive:active:not(:disabled) {
+  transform: scale(0.975);
+  transition-duration: 80ms;
+}
+
+.btn-interactive:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Input Focus Glow */
+input, textarea, select {
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 150ms ease;
+}
+
 /* Scroll Reveal (IntersectionObserver Entrance) */
 .scroll-reveal-item {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1),
-              transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(16px);
+  transition: opacity 450ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
@@ -176,15 +259,70 @@
   transform: translateY(0);
 }
 
+/* Modal Animations */
+@keyframes modalBackdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalContentPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.97) translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-backdrop-animate {
+  animation: modalBackdropFadeIn 220ms ease-out forwards;
+}
+
+.modal-content-animate {
+  animation: modalContentPopIn 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+/* Checkmark draw / success pop animation */
+@keyframes checkmarkPop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-checkmark-pop {
+  animation: checkmarkPop 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* Accessibility: Respect prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   .card-interactive,
   .card-interactive:hover,
   .card-interactive:active,
+  .card-interactive-stat:hover,
+  .card-interactive-compact:hover,
+  .card-interactive-category:hover,
   .card-image-zoom,
+  .category-icon-zoom,
+  .btn-interactive,
   .scroll-reveal-item,
   .scroll-reveal-item.is-revealed,
-  .animate-float-subtle {
+  .animate-float-subtle,
+  .page-enter,
+  .modal-backdrop-animate,
+  .modal-content-animate,
+  .animate-checkmark-pop {
     transform: none !important;
     transition: none !important;
     animation: none !important;

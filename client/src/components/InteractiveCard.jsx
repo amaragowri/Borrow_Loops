@@ -17,6 +17,7 @@ export const InteractiveCard = ({
   href,
   onClick,
   index = 0,
+  variant = 'default', // 'default' | 'stat' | 'category' | 'compact' | 'flat'
   interactive = true,
   enableReveal = true,
   className = '',
@@ -39,8 +40,19 @@ export const InteractiveCard = ({
     ElementTag = 'div';
   }
 
+  // Variant modifier
+  const variantClass = !interactive || variant === 'flat'
+    ? ''
+    : variant === 'stat'
+    ? 'card-interactive card-interactive-stat'
+    : variant === 'category'
+    ? 'card-interactive card-interactive-category'
+    : variant === 'compact'
+    ? 'card-interactive card-interactive-compact'
+    : 'card-interactive';
+
   const baseClasses = [
-    interactive ? 'card-interactive' : '',
+    variantClass,
     enableReveal ? 'scroll-reveal-item' : '',
     enableReveal && isRevealed ? 'is-revealed' : '',
     className,

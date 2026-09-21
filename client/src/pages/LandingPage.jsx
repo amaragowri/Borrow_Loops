@@ -223,6 +223,7 @@ const LandingPage = () => {
               key={cat.name}
               to={`/explore?category=${encodeURIComponent(cat.name)}`}
               index={idx}
+              variant="category"
               className="group relative rounded-2xl overflow-hidden aspect-[4/3] border border-slate-200/80 dark:border-slate-800 shadow-subtle hover:border-brand-300 dark:hover:border-slate-700 card-image-wrap block"
             >
               <img

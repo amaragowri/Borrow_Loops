@@ -148,6 +148,7 @@ const AdminDashboardPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 <InteractiveCard
                   index={0}
+                  variant="stat"
                   onClick={() => setActiveTab('users')}
                   className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col justify-between"
                   role="button"
@@ -160,6 +161,7 @@ const AdminDashboardPage = () => {
 
                 <InteractiveCard
                   index={1}
+                  variant="stat"
                   onClick={() => setActiveTab('listings')}
                   className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col justify-between"
                   role="button"
@@ -173,6 +175,7 @@ const AdminDashboardPage = () => {
 
                 <InteractiveCard
                   index={2}
+                  variant="stat"
                   className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col justify-between"
                 >
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Bookings</span>
@@ -181,6 +184,7 @@ const AdminDashboardPage = () => {
 
                 <InteractiveCard
                   index={3}
+                  variant="stat"
                   className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-subtle flex flex-col justify-between"
                 >
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Platform Revenue (5%)</span>
