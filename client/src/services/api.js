@@ -7,12 +7,18 @@ const api = axios.create({
   },
 });
 
-// Request interceptor: attach token
+// Request interceptor: attach token & handle FormData boundary
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('borrowloop_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    // If sending FormData, delete Content-Type to let browser set boundary automatically
+    if (config.data instanceof FormData) {
+      if (config.headers) {
+        delete config.headers['Content-Type'];
+      }
     }
     return config;
   },

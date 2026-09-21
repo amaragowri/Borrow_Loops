@@ -46,13 +46,9 @@ export const AuthProvider = ({ children }) => {
     return res.data;
   };
 
-  // Register handler (accepts FormData for profile image support)
-  const register = async (formData) => {
-    const res = await api.post('/auth/register', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+  // Register handler (accepts FormData or plain object)
+  const register = async (userData) => {
+    const res = await api.post('/auth/register', userData);
     if (res.data.success) {
       localStorage.setItem('borrowloop_token', res.data.token);
       setToken(res.data.token);
@@ -70,11 +66,7 @@ export const AuthProvider = ({ children }) => {
 
   // Update user profile info
   const updateProfile = async (formData) => {
-    const res = await api.put('/auth/profile', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const res = await api.put('/auth/profile', formData);
     if (res.data.success) {
       setUser(res.data.user);
     }

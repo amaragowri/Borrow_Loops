@@ -38,22 +38,44 @@ const RegisterPage = () => {
     setIsLoading(true);
 
     try {
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('phone', phone);
-      formData.append('password', password);
-      formData.append('location', location);
-      formData.append('preference', preference);
+      let payload;
       if (avatarFile) {
+        const formData = new FormData();
+        formData.append('name', name.trim());
+        formData.append('email', email.trim());
+        formData.append('phone', phone ? phone.trim() : '');
+        formData.append('password', password);
+        formData.append('location', location.trim());
+        formData.append('preference', preference);
         formData.append('avatar', avatarFile);
+        payload = formData;
+      } else {
+        payload = {
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone ? phone.trim() : '',
+          password,
+          location: location.trim(),
+          preference,
+        };
       }
 
-      await register(formData);
+      const res = await register(payload);
       showToast('Account created successfully! Welcome to BorrowLoop.', 'success');
-      navigate('/dashboard');
+      
+      if (preference === 'lender') {
+        navigate('/dashboard?tab=listings');
+      } else if (preference === 'borrower') {
+        navigate('/dashboard?tab=borrowings');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
-      showToast(err.response?.data?.message || 'Registration failed. Try again.', 'error');
+      if (!err.response) {
+        showToast('Unable to connect to BorrowLoop. Please try again.', 'error');
+      } else {
+        showToast(err.response?.data?.message || 'Registration failed. Try again.', 'error');
+      }
     } finally {
       setIsLoading(false);
     }
