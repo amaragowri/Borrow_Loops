@@ -21,7 +21,24 @@ const corsOptions = {
     }
 
     const normalizedOrigin = origin.trim().replace(/\/+$/, '');
+
+    // In development mode, allow any localhost, 127.0.0.1, or local subnet origin
+    if (process.env.NODE_ENV !== 'production') {
+      if (
+        /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+)(:\d+)?$/.test(
+          normalizedOrigin
+        )
+      ) {
+        return callback(null, true);
+      }
+    }
+
     if (allowedOrigins.includes(normalizedOrigin)) {
+      return callback(null, true);
+    }
+
+    // In non-production, be forgiving so developers are never blocked
+    if (process.env.NODE_ENV !== 'production') {
       return callback(null, true);
     }
 
